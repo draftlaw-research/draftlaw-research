@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import Avatar from '../../components/Avatar.astro';
+import { getArticles, getAuthors, authorUrl } from '../../lib/content';
+
+const articles = await getArticles();
+const authors = await getAuthors();
+const countFor = (id: string) => articles.filter((a) => a.authors.some((x) => x.id === id)).length;
+---
+
+<Base title="Authors" description="The students, practitioners and scholars who write for DraftLaw Research.">
+  <div class="wrap">
+    <div class="page-title">
+      <p class="eyebrow">Contributors</p>
+      <h1>Authors</h1>
+      <p>The students, practitioners and scholars who write for DraftLaw Research.</p>
+    </div>
+    <div class="section">
+      <div class="topic-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
+        {authors.map((a) => (
+          <a class="author-tile" href={authorUrl(a)}>
+            <Avatar author={a} />
+            <div>
+              <strong>{a.data.name}</strong>
+              <span>{[a.data.role, a.data.affiliation].filter(Boolean).join(', ') || 'Contributor'}</span>
+              <span>{countFor(a.id)} {countFor(a.id) === 1 ? 'article' : 'articles'}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>

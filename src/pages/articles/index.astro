@@ -1,0 +1,101 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getArticles, getTopics } from '../../lib/content';
+
+const articles = await getArticles();
+const topics = await getTopics();
+const kinds = [...new Set(articles.map((a) => a.data.kind))];
+const years = [...new Set(articles.map((a) => a.data.date.getUTCFullYear()))].sort((a, b) => b - a);
+---
+
+<Base title="Articles" description="Browse all DraftLaw Research articles by topic, type, year or keyword.">
+  <div class="wrap">
+    <div class="page-title">
+      <p class="eyebrow">Archive</p>
+      <h1>Articles</h1>
+      <p>Filter by topic, type or year, or search by title, author and keyword.</p>
+    </div>
+
+    <form class="filters" role="search" onsubmit="return false">
+      <div>
+        <label for="q">Search</label>
+        <input id="q" type="search" placeholder="Title, author or keyword" autocomplete="off" />
+      </div>
+      <div>
+        <label for="topic">Topic</label>
+        <select id="topic">
+          <option value="">All topics</option>
+          {topics.map((t) => <option value={t.id}>{t.data.name}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="kind">Type</label>
+        <select id="kind">
+          <option value="">All types</option>
+          {kinds.map((k) => <option value={k}>{k}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="year">Year</label>
+        <select id="year">
+          <option value="">All years</option>
+          {years.map((y) => <option value={String(y)}>{y}</option>)}
+        </select>
+      </div>
+    </form>
+    <p class="result-count" id="count" aria-live="polite">{articles.length} of {articles.length} articles</p>
+
+    <ul class="list" id="list">
+      {articles.map((a) => (
+        <li
+          data-topic={a.topic.id}
+          data-kind={a.data.kind}
+          data-year={a.data.date.getUTCFullYear()}
+          data-text={[a.data.title, a.data.summary, ...a.authors.map((x) => x.data.name), ...a.data.keywords]
+            .join(' ')
+            .toLowerCase()}
+        >
+          <ArticleCard article={a} variant="row" />
+        </li>
+      ))}
+    </ul>
+    <p class="empty" id="empty" hidden>No articles match these filters. Try removing one.</p>
+  </div>
+</Base>
+
+<script>
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const q = $<HTMLInputElement>('q');
+  const topic = $<HTMLSelectElement>('topic');
+  const kind = $<HTMLSelectElement>('kind');
+  const year = $<HTMLSelectElement>('year');
+  const count = $('count');
+  const empty = $('empty');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('#list > li'));
+
+  function apply() {
+    const text = q.value.trim().toLowerCase();
+    let shown = 0;
+    for (const li of items) {
+      const ok =
+        (!topic.value || li.dataset.topic === topic.value) &&
+        (!kind.value || li.dataset.kind === kind.value) &&
+        (!year.value || li.dataset.year === year.value) &&
+        (!text || (li.dataset.text ?? '').includes(text));
+      li.hidden = !ok;
+      if (ok) shown++;
+    }
+    count.textContent = `${shown} of ${items.length} articles`;
+    empty.hidden = shown !== 0;
+  }
+
+  // Allow links like /articles/?topic=human-rights
+  const params = new URLSearchParams(location.search);
+  if (params.get('topic')) topic.value = params.get('topic')!;
+  if (params.get('kind')) kind.value = params.get('kind')!;
+  if (params.get('q')) q.value = params.get('q')!;
+
+  [q, topic, kind, year].forEach((el) => el.addEventListener('input', apply));
+  apply();
+</script>

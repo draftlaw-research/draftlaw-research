@@ -1,0 +1,12 @@
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+
+# Local files
+.DS_Store
+.env
+.env.*
+
+# Internal planning files: the GitHub repository is PUBLIC, never commit these
+_internal/

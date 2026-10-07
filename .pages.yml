@@ -1,0 +1,78 @@
+# Config for Pages CMS (https://pagescms.org), a free form-style editor that edits this repository.
+# DRAFT: written from memory of the Pages CMS format and NOT tested yet.
+# Check it against https://pagescms.org/docs and fix small things if the editor complains.
+# When a new author is added, add one line to the "authors" list below (use the file name without .md).
+
+media:
+  input: src/assets/covers
+  output: /src/assets/covers
+
+content:
+  - name: articles
+    label: Articles
+    type: collection
+    path: src/content/articles
+    filename: '{primary}.md'
+    view:
+      fields: [title, date, kind, featured]
+      primary: title
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: summary, label: Summary (shown on cards, max 400 characters), type: text, required: true }
+      - name: authors
+        label: Authors
+        type: select
+        list: true
+        required: true
+        options:
+          values:
+            - { value: mira-lindqvist, label: Mira Lindqvist }
+            - { value: daniel-okafor, label: Daniel Okafor }
+            - { value: priya-raman, label: Priya Raman }
+      - name: topic
+        label: Topic
+        type: select
+        required: true
+        options:
+          values:
+            - { value: constitutional-law, label: Constitutional Law }
+            - { value: human-rights, label: Human Rights }
+            - { value: international-law, label: International Law }
+            - { value: technology-and-law, label: Technology and Law }
+            - { value: legal-education, label: Legal Education }
+      - name: kind
+        label: Type
+        type: select
+        default: Article
+        options:
+          values: [Article, Case summary, Commentary, Opinion]
+      - { name: date, label: Publication date, type: date, required: true }
+      - { name: cover, label: Cover image (1200 x 630, under 200 KB), type: image }
+      - { name: coverAlt, label: Image description for screen readers, type: string }
+      - { name: coverCredit, label: Image credit (optional), type: string }
+      - { name: featured, label: Pin to Featured on the front page, type: boolean, default: false }
+      - { name: keywords, label: Keywords, type: string, list: true }
+      - { name: peerReviewed, label: Blind peer reviewed, type: boolean, default: true }
+      - { name: body, label: Article text, type: rich-text }
+
+  - name: authors
+    label: Authors
+    type: collection
+    path: src/content/authors
+    filename: '{primary}.md'
+    view:
+      fields: [name, role, affiliation]
+      primary: name
+    fields:
+      - { name: name, label: Full name, type: string, required: true }
+      - { name: role, label: Role, type: string }
+      - { name: affiliation, label: University or organisation, type: string }
+      - { name: country, label: Country, type: string }
+      - { name: orcid, label: ORCID (optional), type: string }
+      - { name: linkedin, label: LinkedIn link (optional), type: string }
+      - { name: website, label: Website link (optional), type: string }
+      - { name: body, label: Short bio, type: rich-text }

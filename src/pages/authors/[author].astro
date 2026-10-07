@@ -1,0 +1,50 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import Avatar from '../../components/Avatar.astro';
+import { getArticles, getAuthors } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const authors = await getAuthors();
+  const articles = await getArticles();
+  return authors.map((author) => ({
+    params: { author: author.id },
+    props: { author, articles: articles.filter((a) => a.authors.some((x) => x.id === author.id)) },
+  }));
+}
+
+const { author, articles } = Astro.props;
+const { Content } = await render(author);
+const d = author.data;
+const line = [d.role, d.affiliation, d.country].filter(Boolean).join(', ');
+---
+
+<Base title={d.name} description={`${d.name}${line ? ', ' + line : ''}. Articles on DraftLaw Research.`}>
+  <div class="wrap">
+    <div class="author-head">
+      <Avatar author={author} big />
+      <div>
+        <p class="eyebrow"><a href="/authors/">Authors</a></p>
+        <h1>{d.name}</h1>
+        {line && <p class="role">{line}</p>}
+        <ul class="links">
+          {d.orcid && <li><a href={`https://orcid.org/${d.orcid}`} rel="noopener">ORCID {d.orcid}</a></li>}
+          {d.linkedin && <li><a href={d.linkedin} rel="noopener">LinkedIn</a></li>}
+          {d.website && <li><a href={d.website} rel="noopener">Website</a></li>}
+        </ul>
+      </div>
+    </div>
+
+    <div class="page-text" style="padding-bottom:1rem">
+      <Content />
+    </div>
+
+    <div class="section" style="padding-top:0">
+      <div class="section-head"><h2>Articles by {d.name}</h2></div>
+      <ul class="list">
+        {articles.map((a) => <li><ArticleCard article={a} variant="row" /></li>)}
+      </ul>
+    </div>
+  </div>
+</Base>

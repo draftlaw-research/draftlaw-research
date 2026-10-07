@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getArticles, getTopics, topicUrl } from '../../lib/content';
+
+const articles = await getArticles();
+const topics = await getTopics();
+const countFor = (id: string) => articles.filter((a) => a.topic.id === id).length;
+---
+
+<Base title="Topics" description="Browse DraftLaw Research articles by area of law.">
+  <div class="wrap">
+    <div class="page-title">
+      <p class="eyebrow">Sections</p>
+      <h1>Topics</h1>
+      <p>Every article belongs to one topic. Pick an area to see everything we have published in it.</p>
+    </div>
+    <div class="section">
+      <div class="topic-grid">
+        {topics.map((t) => (
+          <a class="tile" href={topicUrl(t)}>
+            <h3>{t.data.name}</h3>
+            <p>{t.data.description}</p>
+            <span class="count">{countFor(t.id)} {countFor(t.id) === 1 ? 'article' : 'articles'}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>
