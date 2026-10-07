@@ -1,0 +1,32 @@
+---
+import { SITE, NAV } from '../config';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <h2>{SITE.name}</h2>
+      <p>
+        A nonprofit initiative building the next generation of legal scholars and giving legal voices a place to be
+        heard. {SITE.location}.
+      </p>
+    </div>
+    <div>
+      <h2>Explore</h2>
+      <ul>
+        {NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2>Contact</h2>
+      <ul>
+        <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+        <li><a href="/about/#write">Write for us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    © {year} {SITE.name}. {SITE.rights}
+  </div>
+</footer>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://draftlawresearch.org/sitemap-index.xml

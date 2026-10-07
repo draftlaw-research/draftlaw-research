@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getArticles, getTopics, getMostRead, topicUrl, formatDate } from '../lib/content';
+import { SITE } from '../config';
+
+const articles = await getArticles();
+const topics = await getTopics();
+
+// Featured = articles marked "featured: true". If none are marked, show the newest three.
+const pinned = articles.filter((a) => a.data.featured);
+const featured = (pinned.length ? pinned : articles).slice(0, 3);
+const [lead, ...side] = featured;
+const shown = new Set(featured.map((a) => a.id));
+const latest = articles.filter((a) => !shown.has(a.id)).slice(0, 6);
+const mostRead = getMostRead(articles, 5);
+const countFor = (topicId: string) => articles.filter((a) => a.topic.id === topicId).length;
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Open access · Blind peer reviewed</p>
+      <h1>{SITE.tagline}.</h1>
+      <p class="lead">
+        Case summaries, commentary and analysis from law students, practitioners and scholars worldwide. Serious
+        legal scholarship should be open to anyone with the curiosity and drive to pursue it.
+      </p>
+      <div class="actions">
+        <a class="btn" href="/articles/">Read the latest</a>
+        <a class="btn ghost" href="/about/#write">Write for us</a>
+      </div>
+    </div>
+  </section>
+
+  {lead && (
+    <section class="section" aria-labelledby="featured-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="featured-h">Featured</h2>
+        </div>
+        <div class="featured">
+          <ArticleCard article={lead} variant="lead" />
+          {side.length > 0 && (
+            <div class="side">
+              {side.map((a) => <ArticleCard article={a} variant="row" />)}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap cols">
+      <div>
+        <div class="section-head">
+          <h2>Latest articles</h2>
+          <a class="more" href="/articles/">All articles →</a>
+        </div>
+        {latest.length > 0 ? (
+          <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">
+            {latest.map((a) => <ArticleCard article={a} />)}
+          </div>
+        ) : (
+          <p class="empty">More articles are on the way.</p>
+        )}
+      </div>
+
+      <aside aria-label="Most read and contribute">
+        {mostRead.length > 0 && (
+          <>
+            <div class="section-head">
+              <h2>Most read</h2>
+            </div>
+            <ol class="most-read">
+              {mostRead.map((a) => (
+                <li>
+                  <div>
+                    <a href={a.url}>{a.data.title}</a>
+                    <small>{a.authors.map((x) => x.data.name).join(', ')} · {formatDate(a.data.date, 'short')}</small>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
+        <div class="aside-box">
+          <h3>Have something to say?</h3>
+          <p>We publish contributors from any discipline, as long as the work helps readers understand the law.</p>
+          <a class="btn ghost" href="/about/#write">Contribute</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" aria-labelledby="topics-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="topics-h">Browse by topic</h2>
+        <a class="more" href="/topics/">All topics →</a>
+      </div>
+      <div class="topic-grid">
+        {topics.map((t) => (
+          <a class="tile" href={topicUrl(t)}>
+            <h3>{t.data.name}</h3>
+            <p>{t.data.description}</p>
+            <span class="count">{countFor(t.id)} {countFor(t.id) === 1 ? 'article' : 'articles'}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band section">
+    <div class="wrap">
+      <p class="eyebrow">About us</p>
+      <p class="statement">Access to serious academic mentorship and publication should not depend on where you study or who you know.</p>
+      <div class="two">
+        <div>
+          <h3>Co-authorship mentorship</h3>
+          <p>
+            Experienced legal researchers bring an original idea and work with two or three undergraduate co-authors
+            for one semester, taking a project from conception to journal-ready submission.
+          </p>
+        </div>
+        <div>
+          <h3>The DraftLaw blog</h3>
+          <p>
+            An open platform for case summaries, legal opinions, commentary and analysis. Every submission goes through
+            blind peer review, so each piece is judged on its merit alone.
+          </p>
+        </div>
+      </div>
+      <p style="margin:2rem 0 0"><a class="btn ghost" href="/about/">More about us</a></p>
+    </div>
+  </section>
+</Base>

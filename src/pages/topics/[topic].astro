@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getArticles, getTopics } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const topics = await getTopics();
+  const articles = await getArticles();
+  return topics.map((topic) => ({
+    params: { topic: topic.id },
+    props: { topic, articles: articles.filter((a) => a.topic.id === topic.id) },
+  }));
+}
+
+const { topic, articles } = Astro.props;
+---
+
+<Base title={topic.data.name} description={topic.data.description}>
+  <div class="wrap">
+    <div class="page-title">
+      <p class="eyebrow"><a href="/topics/">Topics</a></p>
+      <h1>{topic.data.name}</h1>
+      <p>{topic.data.description}</p>
+    </div>
+    <div class="section">
+      {articles.length > 0 ? (
+        <ul class="list">
+          {articles.map((a) => <li><ArticleCard article={a} variant="row" /></li>)}
+        </ul>
+      ) : (
+        <p class="empty">No articles in this topic yet.</p>
+      )}
+    </div>
+  </div>
+</Base>

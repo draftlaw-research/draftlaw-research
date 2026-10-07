@@ -1,0 +1,42 @@
+---
+import { Image } from 'astro:assets';
+import type { Article } from '../lib/content';
+import { formatDate, nameList, topicUrl } from '../lib/content';
+
+interface Props {
+  article: Article;
+  variant?: 'default' | 'lead' | 'row';
+}
+
+const { article, variant = 'default' } = Astro.props;
+const { data, topic, authors } = article;
+
+const sizes = {
+  default: '(min-width: 1100px) 350px, (min-width: 640px) 45vw, 100vw',
+  lead: '(min-width: 1100px) 680px, 100vw',
+  row: '(min-width: 640px) 260px, 100vw',
+}[variant];
+---
+
+<article class:list={['card', variant === 'lead' && 'lead', variant === 'row' && 'row']}>
+  <a class="card-media" href={article.url} tabindex="-1" aria-hidden="true">
+    <Image
+      src={article.cover}
+      alt=""
+      widths={[320, 480, 640, 800, 1000]}
+      sizes={sizes}
+      loading={variant === 'lead' ? 'eager' : 'lazy'}
+    />
+  </a>
+  <div class="card-body">
+    <p class="eyebrow">
+      <a href={topicUrl(topic)}>{topic.data.name}</a>
+      {data.kind !== 'Article' && <span class="kind"> · {data.kind}</span>}
+    </p>
+    <h3><a href={article.url}>{data.title}</a></h3>
+    <p class="summary">{data.summary}</p>
+    <p class="byline">
+      <strong>{nameList(authors.map((a) => a.data.name))}</strong> · {formatDate(data.date, 'short')}
+    </p>
+  </div>
+</article>

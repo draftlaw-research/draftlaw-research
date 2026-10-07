@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+
+<Base title="About" description={SITE.description}>
+  <div class="wrap">
+    <div class="page-title">
+      <p class="eyebrow">About us</p>
+      <h1>DraftLaw Research</h1>
+      <p>
+        A nonprofit initiative dedicated to building the next generation of legal scholars and giving legal voices a
+        place to be heard.
+      </p>
+    </div>
+
+    <div class="page-text">
+      <p>
+        We open the doors of academic publishing to law students and emerging researchers through two connected
+        programs: structured co-authorship mentorship and an open legal writing platform.
+      </p>
+
+      <h2>Our mission</h2>
+      <p>
+        To make serious legal scholarship accessible to anyone with the curiosity and drive to pursue it, regardless
+        of where they study, what field they come from, or who they know.
+      </p>
+
+      <h2>What we do</h2>
+      <p>
+        <strong>Co-authorship mentorship.</strong> Each cycle, experienced legal researchers bring an original research
+        idea and work with 2 to 3 undergraduate co-authors over one semester. Together they take a project from
+        conception to journal-ready submission, learning how to identify a research question, build an argument, write
+        for publication, and navigate the academic process. Students learn by doing. Mentors publish. Everyone grows.
+      </p>
+      <p>
+        <strong>The DraftLaw blog.</strong> Our open platform publishes case summaries, legal opinions, commentary, and
+        analytical articles from law students, practitioners, and scholars worldwide. We welcome contributors from any
+        discipline, so long as their work contributes to the understanding of law. Every submission goes through blind
+        peer review before publication, so each piece is judged on its merit alone.
+      </p>
+
+      <h2>Who we work with</h2>
+      <p>
+        We welcome mentors, students, and contributors from any jurisdiction and academic background, with a primary
+        focus on law. Our initiative is based in Sweden and operates internationally.
+      </p>
+
+      <h2>Our belief</h2>
+      <p>
+        We were founded by legal researchers who believe that access to serious academic mentorship and publication
+        should not depend on where you study or who you know.
+      </p>
+
+      <h2 id="write">Get involved</h2>
+      <p>
+        Want to join as a mentor, co-author, or blog contributor? Reach out at
+        <a href={`mailto:${SITE.email}`}> {SITE.email}</a>.
+      </p>
+    </div>
+  </div>
+</Base>
