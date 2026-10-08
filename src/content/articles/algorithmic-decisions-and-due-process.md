@@ -24,7 +24,7 @@ Public bodies increasingly use automated tools to sort, score or flag individual
 
 First, reasons: a person should be told, in plain language, what drove the outcome. Second, access: the material relied on should be available to the person or to a reviewing body. Third, human review: someone with authority must be able to depart from the output.[^1]
 
-![](/src/assets/covers/arches.jpg)
+![](../../assets/covers/arches.jpg)
 
 ## Where the gaps appear
 
