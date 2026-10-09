@@ -1,16 +1,21 @@
 ---
 title: When law xxx xxx xxxx xx
 summary: Human rights has xxxx xxxx xxxx xxx xxxxx xxx x xxxxx xxx xxx xxx.
-authors: [first-test]
+authors:
+  - first-test
 topic: technology-and-law
 kind: Article
 date: 2026-09-02
 cover: /src/assets/covers/circuit.jpg
 coverAlt: Abstract network of lines and nodes on a dark blue background
 featured: true
-keywords: [automated decision-making, due process, transparency]
+keywords:
+  - automated decision-making
+  - due process
+  - transparency
+peerReviewed: true
 ---
-<p class="note">Sample article for design preview. Replace or delete before launch.</p>
+Sample article for design preview. Replace or delete before launch.
 
 Public bodies increasingly use automated tools to sort, score or flag individual cases. The legal question is not whether a tool is used, but whether the person affected can understand and challenge the decision.
 
