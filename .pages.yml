@@ -33,6 +33,7 @@ content:
             - { value: mira-lindqvist, label: Mira Lindqvist }
             - { value: daniel-okafor, label: Daniel Okafor }
             - { value: priya-raman, label: Priya Raman }
+            - { value: first-test, label: First Test }
       - name: topic
         label: Topic
         type: select
